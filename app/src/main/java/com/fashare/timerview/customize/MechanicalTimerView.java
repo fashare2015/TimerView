@@ -1,4 +1,4 @@
-package com.fashare.timer_view;
+package com.fashare.timerview.customize;
 
 import android.content.Context;
 import android.support.annotation.IdRes;
@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.fashare.timer_view.BaseTimerView;
+import com.fashare.timer_view.TimeInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +27,7 @@ import java.util.List;
  * @see #setSubTimeView(int, int, ViewGroup.LayoutParams)
  * @see #setSuffixView(int, int, ViewGroup.LayoutParams)
  */
-public class TimerView extends BaseTimerView {
+public class MechanicalTimerView extends BaseTimerView {
     public static final int UNIT_COUNT = 3;
 
     private List<ViewUnit> mViewUnitList;
@@ -39,7 +42,7 @@ public class TimerView extends BaseTimerView {
      * @param rootLayoutParams  rootLayout 的 LayoutParams, 输入 null 则取默认 WRAP_CONTENT
      * @return
      */
-    public TimerView setSubTimeView(@LayoutRes int rootLayoutRes, @IdRes int textIdRes, ViewGroup.LayoutParams rootLayoutParams){
+    public MechanicalTimerView setSubTimeView(@LayoutRes int rootLayoutRes, @IdRes int textIdRes, ViewGroup.LayoutParams rootLayoutParams){
         mViewUnitStyle.mSubTimeItem.mRootLayoutRes = rootLayoutRes;
         mViewUnitStyle.mSubTimeItem.mTextIdRes = textIdRes;
         mViewUnitStyle.mSubTimeItem.mRootLayoutParams = rootLayoutParams;
@@ -54,7 +57,7 @@ public class TimerView extends BaseTimerView {
      * @param rootLayoutParams  rootLayout 的 LayoutParams, 输入 null 则取默认 WRAP_CONTENT
      * @return
      */
-    public TimerView setSuffixView(@LayoutRes int rootLayoutRes, @IdRes int textIdRes, ViewGroup.LayoutParams rootLayoutParams){
+    public MechanicalTimerView setSuffixView(@LayoutRes int rootLayoutRes, @IdRes int textIdRes, ViewGroup.LayoutParams rootLayoutParams){
         mViewUnitStyle.mSuffixItem.mRootLayoutRes = rootLayoutRes;
         mViewUnitStyle.mSuffixItem.mTextIdRes = textIdRes;
         mViewUnitStyle.mSuffixItem.mRootLayoutParams = rootLayoutParams;
@@ -62,15 +65,15 @@ public class TimerView extends BaseTimerView {
         return this;
     }
 
-    public TimerView(Context context) {
+    public MechanicalTimerView(Context context) {
         super(context);
     }
 
-    public TimerView(Context context, AttributeSet attrs) {
+    public MechanicalTimerView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public TimerView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public MechanicalTimerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -146,9 +149,9 @@ public class TimerView extends BaseTimerView {
                 mTextIdRes = textIdRes;
                 mRootLayoutParams = lp;
                 if(mRootLayoutParams == null){
-                    mRootLayoutParams = new LayoutParams(
-                            LayoutParams.WRAP_CONTENT,
-                            LayoutParams.WRAP_CONTENT
+                    mRootLayoutParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
                     );
                 }
 

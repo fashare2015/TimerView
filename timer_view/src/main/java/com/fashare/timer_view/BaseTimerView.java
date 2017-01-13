@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
  * 计数代理 View, 接入 ITimer 的逻辑实现.
  * UI 展示由子类自行实现.
  *
- * @see TimerView
+ * @see DigitalTimerView
  *
  */
 public abstract class BaseTimerView extends LinearLayout implements ITimer, ITimer.OnCountTimeListener {
