@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
  */
 public abstract class BaseTimerView extends LinearLayout implements ITimer, ITimer.OnCountTimeListener {
 
-    private ITimer mTimer = ITimer.COUNT_DOWN;
+    private ITimer mTimer = new ITimer.CountDown();
     private OnCountTimeListener mOnCountTimeListener;
 
     public void setTimer(ITimer timer) {

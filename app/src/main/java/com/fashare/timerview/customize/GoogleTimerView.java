@@ -16,9 +16,7 @@ import org.greenrobot.eventbus.EventBus;
 /**
  * Created by jinliangshan on 17/1/11.
  *
- * 标准的横向时间展示, "00:00:00".
- *
- * 展示的 UI 布局由外界注入.
+ * 对接 GoogleClock
  *
  */
 public class GoogleTimerView extends BaseTimerView {
@@ -71,7 +69,6 @@ public class GoogleTimerView extends BaseTimerView {
 
         @Override
         protected void onWindowVisibilityChanged(int visibility) {
-            // do nothing
 //            super.onWindowVisibilityChanged(visibility);
             Intent intent = new Intent(getContext(), LyClockService.class);
             getContext().stopService(intent);

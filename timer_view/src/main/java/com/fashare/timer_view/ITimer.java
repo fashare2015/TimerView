@@ -12,8 +12,6 @@ import java.util.concurrent.TimeUnit;
  * 计时器
  */
 public interface ITimer {
-    ITimer COUNT_DOWN = new CountDown();
-
     void setLifeCycleListener(LifeCycleListener lifeCycleListener);
 
     void setOnCountTimeListener(OnCountTimeListener onCountTimeListener);

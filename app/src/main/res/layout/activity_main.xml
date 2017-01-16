@@ -1,14 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.fashare.timerview.MainActivity">
+    tools:context="com.fashare.timerview.MainActivity"
+    android:orientation="vertical"
+    android:gravity="center">
 
-    <com.fashare.timerview.customize.GoogleTimerView
+    <com.fashare.timer_view.DigitalTimerView
+        android:id="@+id/dtv_simple"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
+    <com.fashare.timer_view.DigitalTimerView
+        android:id="@+id/dtv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"/>
 
-</RelativeLayout>
+    <com.fashare.timerview.customize.MechanicalTimerView
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        android:layout_marginTop="20dp"/>
+
+    <com.fashare.timerview.customize.GoogleTimerView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"/>
+
+
+</LinearLayout>
