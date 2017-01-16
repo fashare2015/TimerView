@@ -56,7 +56,7 @@ then
     fi
 
     # Convert the video (XXX.mp4) to a gif (XXX.gif).
-    $ffmpegPath -r 20 -i "$pcPath$MP4_POSTFIX" -s $size -b:v 1500k "$pcPath$GIF_POSTFIX"
+    $ffmpegPath -i "$pcPath$MP4_POSTFIX" -s $size -b:v 1500k "$pcPath$GIF_POSTFIX"
 
     if [ $? -eq 0 ]; then
         # Delete the redundant file (XXX.mp4).
