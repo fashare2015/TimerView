@@ -61,6 +61,12 @@ public class GoogleTimerView extends BaseTimerView {
         this.start(300*1000);
     }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        this.stop();
+    }
+
     class MyGoogleClock extends GoogleClock{
 
         public MyGoogleClock(Context context) {

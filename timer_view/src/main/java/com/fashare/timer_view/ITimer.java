@@ -46,8 +46,7 @@ public interface ITimer {
         private ScheduledExecutorService mTimerExecutor; // 定时器
         private Handler sHandler = new Handler(Looper.getMainLooper());
 
-        private long mLeftTime,     // 剩余时间(ms)
-                mEndTimeInFuture;   // 终止时间点(ms)
+        private long mLeftTime;     // 剩余时间(ms)
 
         private LifeCycleListener mLifeCycleListener;
         private OnCountTimeListener mOnCountTimeListener;
@@ -79,13 +78,13 @@ public interface ITimer {
             showdown();
             mTimerExecutor = Executors.newSingleThreadScheduledExecutor();
 
-            mEndTimeInFuture = initTime + System.currentTimeMillis();
             mLeftTime = initTime;
 
             mTimerExecutor.scheduleAtFixedRate(new Runnable() {
+                Runnable mCountTimeTask = new CountTimeTask();
                 @Override
                 public void run() {
-                    sHandler.post(new CountTimeTask());
+                    sHandler.post(mCountTimeTask);
                 }
             }, 0, PERIOD, TimeUnit.MILLISECONDS);
 
@@ -111,8 +110,7 @@ public interface ITimer {
         private class CountTimeTask implements Runnable {
             @Override
             public void run() {
-                mLeftTime = mEndTimeInFuture - System.currentTimeMillis();
-
+                mLeftTime -= PERIOD;
                 if(mLeftTime >= 0){
                     countTime(mLeftTime);
                 }else{

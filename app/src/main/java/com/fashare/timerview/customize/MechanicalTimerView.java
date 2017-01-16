@@ -54,4 +54,10 @@ public class MechanicalTimerView extends BaseTimerView {
         super.onAttachedToWindow();
         this.start(300*1000);
     }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        this.stop();
+    }
 }
