@@ -14,20 +14,25 @@
         android:layout_height="wrap_content"/>
 
     <com.fashare.timer_view.DigitalTimerView
-        android:id="@+id/dtv"
+        android:id="@+id/dtv_complex"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="10dp"/>
 
-    <com.fashare.timerview.customize.MechanicalTimerView
-        android:layout_width="260dp"
-        android:layout_height="260dp"
-        android:layout_marginTop="20dp"/>
+    <com.fashare.timer_view.DigitalTimerView
+        android:id="@+id/dtv_fire"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"/>
 
     <com.fashare.timerview.customize.GoogleTimerView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="10dp"/>
 
+    <com.fashare.timerview.customize.MechanicalTimerView
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        android:layout_marginTop="10dp"/>
 
 </LinearLayout>

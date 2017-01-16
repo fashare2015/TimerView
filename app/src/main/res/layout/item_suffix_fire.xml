@@ -4,15 +4,14 @@
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:gravity="center"
     android:paddingLeft="4dp"
     android:paddingRight="4dp">
 
-    <TextView
-        android:id="@+id/tv_suffix"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=":"
-        android:textSize="16sp"
-        android:textColor="@color/colorAccent"/>
+    <ImageView
+        android:id="@+id/iv_suffix"
+        android:layout_width="15dp"
+        android:layout_height="30dp"
+        android:src="@drawable/divider"/>
 
 </LinearLayout>

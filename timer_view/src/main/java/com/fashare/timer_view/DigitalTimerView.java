@@ -1,14 +1,12 @@
 package com.fashare.timer_view;
 
 import android.content.Context;
-import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,8 +19,8 @@ import java.util.List;
  *
  * 展示的 UI 布局由外界注入.
  *
- * @see #setSubTimeView(int, int, ViewGroup.LayoutParams)
- * @see #setSuffixView(int, int, ViewGroup.LayoutParams)
+ * @see #setSubTimeView(int, ViewGroup.LayoutParams)
+ * @see #setSuffixView(int, ViewGroup.LayoutParams)
  */
 public class DigitalTimerView extends BaseTimerView {
     public static final int UNIT_COUNT = 3;
@@ -32,33 +30,54 @@ public class DigitalTimerView extends BaseTimerView {
 
     ViewUnit mViewUnitStyle;    // 显示风格
 
+    ViewUpdater mViewUpdater;
+
+    public DigitalTimerView setViewUpdater(ViewUpdater viewUpdater) {
+        mViewUpdater = viewUpdater;
+        return this;
+    }
+
+    /**
+     * 对外接口: 视图更新方式
+     */
+    public interface ViewUpdater{
+        /**
+         * 初始化 "后缀View", 如设成 "冒号" 或者 "时, 分, 秒" 啥的
+         * @param suffixView
+         * @param pos
+         */
+        void initSuffix(View suffixView, int pos);
+
+        /**
+         * subTime 指的是 "时, 分, 秒" 这三个小单元
+         * @param subTimeView
+         * @param subTime
+         * @param formattedSubTime
+         */
+        void updateShow(View subTimeView, int subTime, String formattedSubTime);
+    }
+
     /**
      * 设置 "时、分、秒" 的显示风格
      * @param rootLayoutRes 布局 xml 文件
-     * @param textIdRes     rootLayout 中, 用于显示的 TextView
      * @param rootLayoutParams  rootLayout 的 LayoutParams, 输入 null 则取默认 WRAP_CONTENT
      * @return
      */
-    public DigitalTimerView setSubTimeView(@LayoutRes int rootLayoutRes, @IdRes int textIdRes, ViewGroup.LayoutParams rootLayoutParams){
+    public DigitalTimerView setSubTimeView(@LayoutRes int rootLayoutRes, ViewGroup.LayoutParams rootLayoutParams){
         mViewUnitStyle.mSubTimeItem.mRootLayoutRes = rootLayoutRes;
-        mViewUnitStyle.mSubTimeItem.mTextIdRes = textIdRes;
         mViewUnitStyle.mSubTimeItem.mRootLayoutParams = rootLayoutParams;
-        initViewUnitList();
         return this;
     }
 
     /**
      * 设置 "后缀" 的显示风格, 默认为 冒号":"
      * @param rootLayoutRes 布局 xml 文件
-     * @param textIdRes     rootLayout 中, 用于显示的 TextView
      * @param rootLayoutParams  rootLayout 的 LayoutParams, 输入 null 则取默认 WRAP_CONTENT
      * @return
      */
-    public DigitalTimerView setSuffixView(@LayoutRes int rootLayoutRes, @IdRes int textIdRes, ViewGroup.LayoutParams rootLayoutParams){
+    public DigitalTimerView setSuffixView(@LayoutRes int rootLayoutRes, ViewGroup.LayoutParams rootLayoutParams){
         mViewUnitStyle.mSuffixItem.mRootLayoutRes = rootLayoutRes;
-        mViewUnitStyle.mSuffixItem.mTextIdRes = textIdRes;
         mViewUnitStyle.mSuffixItem.mRootLayoutParams = rootLayoutParams;
-        initViewUnitList();
         return this;
     }
 
@@ -84,7 +103,6 @@ public class DigitalTimerView extends BaseTimerView {
                 new SubTimeItem(getContext()),
                 new SuffixItem(getContext())
         );
-        initViewUnitList();
     }
 
     private void initViewUnitList() {
@@ -99,22 +117,41 @@ public class DigitalTimerView extends BaseTimerView {
             mViewUnitList.add(viewUnit);
 
             this.addView(viewUnit.mSubTimeItem.mRootView);
-            if(i != UNIT_COUNT-1 || mIsShowLastSuffix)
-                this.addView(viewUnit.mSuffixItem.mRootView);
+            if(i != UNIT_COUNT-1 || mIsShowLastSuffix){
+                View suffixView = viewUnit.mSuffixItem.mRootView;
+                this.addView(suffixView);
+
+                if(mViewUpdater != null)
+                    mViewUpdater.initSuffix(suffixView, i);
+            }
         }
     }
 
+    boolean mHasInit = false;
     public void updateShow(long curTime){
+        if(!mHasInit){
+            mHasInit = true;
+            initViewUnitList();
+        }
         TimeInfo timeInfo = TimeInfo.make(curTime);
 
-        List<String> timeTextList = Arrays.asList(
+        List<Integer> timeList = Arrays.asList(
+                (int)timeInfo.getHour(),
+                (int)timeInfo.getMinute(),
+                (int)timeInfo.getSecond()
+        );
+
+        List<String> formattedTimeList = Arrays.asList(
                 timeInfo.getFormatedHour(),
                 timeInfo.getFormatedMinute(),
                 timeInfo.getFormatedSecond()
         );
 
-        for(int i=0; i<mViewUnitList.size() && i<timeTextList.size(); i++)
-            mViewUnitList.get(i).mSubTimeItem.mTextView.setText(timeTextList.get(i));
+        for(int i=0; i<mViewUnitList.size() && i<formattedTimeList.size(); i++) {
+            View subTimeView = mViewUnitList.get(i).mSubTimeItem.mRootView;
+            if(mViewUpdater != null)
+                mViewUpdater.updateShow(subTimeView, timeList.get(i), formattedTimeList.get(i));
+        }
     }
 
     private static class ViewUnit{
@@ -129,21 +166,17 @@ public class DigitalTimerView extends BaseTimerView {
         private static class Item{
             @LayoutRes
             int mRootLayoutRes;  // 根布局
-            @IdRes
-            int mTextIdRes;          // 其中的 TextView
 
             View mRootView;
-            TextView mTextView;
 
             ViewGroup.LayoutParams mRootLayoutParams;
 
             public Item(Context context) {
-                this(context, android.R.layout.simple_list_item_1, android.R.id.text1, null);
+                this(context, android.R.layout.simple_list_item_1, null);
             }
 
-            public Item(Context context, @LayoutRes int rootLayoutRes, @IdRes int textIdRes, ViewGroup.LayoutParams lp) {
+            public Item(Context context, @LayoutRes int rootLayoutRes, ViewGroup.LayoutParams lp) {
                 mRootLayoutRes = rootLayoutRes;
-                mTextIdRes = textIdRes;
                 mRootLayoutParams = lp;
                 if(mRootLayoutParams == null){
                     mRootLayoutParams = new LayoutParams(
@@ -154,18 +187,10 @@ public class DigitalTimerView extends BaseTimerView {
 
                 mRootView = View.inflate(context, mRootLayoutRes, null);
                 mRootView.setLayoutParams(mRootLayoutParams);
-
-                mTextView = (TextView)mRootView.findViewById(textIdRes);
-                if(mTextView == null || !(mTextView instanceof TextView))
-                    throw new IllegalArgumentException(String.format("Can not find target TextView with your textResId: %d", mTextIdRes));
-
-                initView();
             }
 
-            protected void initView() {}
-
             public Item(Context context, Item item){
-                this(context, item.mRootLayoutRes, item.mTextIdRes, item.mRootLayoutParams);
+                this(context, item.mRootLayoutRes, item.mRootLayoutParams);
             }
         }
     }
@@ -179,8 +204,8 @@ public class DigitalTimerView extends BaseTimerView {
             super(context, item);
         }
 
-        public SubTimeItem(Context context, @LayoutRes int rootLayoutRes, @IdRes int textIdRes, ViewGroup.LayoutParams lp) {
-            super(context, rootLayoutRes, textIdRes, lp);
+        public SubTimeItem(Context context, @LayoutRes int rootLayoutRes, ViewGroup.LayoutParams lp) {
+            super(context, rootLayoutRes, lp);
         }
     }
 
@@ -193,14 +218,8 @@ public class DigitalTimerView extends BaseTimerView {
             super(context, item);
         }
 
-        public SuffixItem(Context context, @LayoutRes int rootLayoutRes, @IdRes int textIdRes, ViewGroup.LayoutParams lp) {
-            super(context, rootLayoutRes, textIdRes, lp);
-        }
-
-        @Override
-        protected void initView() {
-            super.initView();
-            mTextView.setText(":");
+        public SuffixItem(Context context, @LayoutRes int rootLayoutRes, ViewGroup.LayoutParams lp) {
+            super(context, rootLayoutRes, lp);
         }
     }
 }
