@@ -5,6 +5,10 @@
 
 本`TimerView`仅作为`demo`，不保证其健壮性，请勿在实际项目中使用。
 
+#特点
+- `UI容器`与`计时逻辑`分离
+- `UI容器`与`具体UI布局`分离
+
 #Let's Go
 话说，小明在做一个电商项目，有个倒计时需求。
 
@@ -102,4 +106,5 @@ public class TimerView {
 
 #感谢
 https://github.com/lypeer/GoogleClock
+
 https://github.com/gnehsuy/ClockView
